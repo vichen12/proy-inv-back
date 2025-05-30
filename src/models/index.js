@@ -1,4 +1,5 @@
-// Index de modelos 
+const sequelize = require('../config/db');
+
 const Articulo = require('./articulo');
 const Proveedor = require('./proveedor');
 const ArticuloProveedor = require('./articuloProveedor');
@@ -8,49 +9,59 @@ const OrdenCompra = require('./ordenCompra');
 const OrdenCompraDetalle = require('./ordenCompraDetalle');
 const EstadoOrdenCompra = require('./estadoOrdenCompra');
 
-// Articulo N:M Proveedor (a través de ArticuloProveedor)
+// Relaciones N:M entre Articulo y Proveedor
 Articulo.belongsToMany(Proveedor, {
   through: ArticuloProveedor,
   foreignKey: 'id_articulo',
-  otherKey: 'id_proveedor'
+  otherKey: 'id_proveedor',
 });
 Proveedor.belongsToMany(Articulo, {
   through: ArticuloProveedor,
   foreignKey: 'id_proveedor',
-  otherKey: 'id_articulo'
+  otherKey: 'id_articulo',
 });
+
 ArticuloProveedor.belongsTo(Articulo, { foreignKey: 'id_articulo' });
 ArticuloProveedor.belongsTo(Proveedor, { foreignKey: 'id_proveedor' });
 Articulo.hasMany(ArticuloProveedor, { foreignKey: 'id_articulo' });
 Proveedor.hasMany(ArticuloProveedor, { foreignKey: 'id_proveedor' });
 
-// Venta 1:N VentaDetalle
 Venta.hasMany(VentaDetalle, { foreignKey: 'id_venta' });
 VentaDetalle.belongsTo(Venta, { foreignKey: 'id_venta' });
 
-// Articulo 1:N VentaDetalle
 Articulo.hasMany(VentaDetalle, { foreignKey: 'id_articulo' });
 VentaDetalle.belongsTo(Articulo, { foreignKey: 'id_articulo' });
 
-// OrdenCompra 1:N OrdenCompraDetalle
 OrdenCompra.hasMany(OrdenCompraDetalle, { foreignKey: 'id_orden_compra' });
 OrdenCompraDetalle.belongsTo(OrdenCompra, { foreignKey: 'id_orden_compra' });
 
-// ArticuloProveedor 1:N OrdenCompraDetalle (por clave compuesta)
 ArticuloProveedor.hasMany(OrdenCompraDetalle, {
-  foreignKey: ['id_articulo', 'id_proveedor'],
-  sourceKey: ['id_articulo', 'id_proveedor']
+  foreignKey: 'id_articulo',
+  sourceKey: 'id_articulo',
+  constraints: false,
 });
-OrdenCompraDetalle.belongsTo(ArticuloProveedor, {
-  foreignKey: ['id_articulo', 'id_proveedor'],
-  targetKey: ['id_articulo', 'id_proveedor']
+ArticuloProveedor.hasMany(OrdenCompraDetalle, {
+  foreignKey: 'id_proveedor',
+  sourceKey: 'id_proveedor',
+  constraints: false,
 });
 
-// OrdenCompra N:1 EstadoOrdenCompra
+OrdenCompraDetalle.belongsTo(ArticuloProveedor, {
+  foreignKey: 'id_articulo',
+  targetKey: 'id_articulo',
+  constraints: false,
+});
+OrdenCompraDetalle.belongsTo(ArticuloProveedor, {
+  foreignKey: 'id_proveedor',
+  targetKey: 'id_proveedor',
+  constraints: false,
+});
+
 EstadoOrdenCompra.hasMany(OrdenCompra, { foreignKey: 'id_estado' });
 OrdenCompra.belongsTo(EstadoOrdenCompra, { foreignKey: 'id_estado' });
 
 module.exports = {
+  sequelize,
   Articulo,
   Proveedor,
   ArticuloProveedor,
@@ -58,5 +69,5 @@ module.exports = {
   VentaDetalle,
   OrdenCompra,
   OrdenCompraDetalle,
-  EstadoOrdenCompra
-}; 
+  EstadoOrdenCompra,
+};
