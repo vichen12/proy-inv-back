@@ -1,4 +1,4 @@
-const { Proveedor, Articulo } = require('../models');
+const { Proveedor } = require('../models');
 
 exports.createProveedor = async (req, res) => {
   try {
@@ -19,6 +19,8 @@ exports.createProveedor = async (req, res) => {
 exports.updateProveedor = async (req, res) => {
   try {
     const { id } = req.params;
+    if ('id_proveedor' in req.body) delete req.body.id_proveedor;
+
     const [updated] = await Proveedor.update(req.body, { where: { id_proveedor: id } });
     if (updated) {
       const proveedor = await Proveedor.findByPk(id);
@@ -75,6 +77,20 @@ exports.getArticulosByProveedor = async (req, res) => {
   try {
     const proveedor = await Proveedor.findByPk(req.params.id);
     if (!proveedor) return res.status(404).json({ error: 'Proveedor no encontrado' });
+
+    const articulos = await proveedor.getArticulos();
+    res.json(articulos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getArticulosByProveedorCuit = async (req, res) => {
+  try {
+    const cuit = req.params.cuit;
+    const proveedor = await Proveedor.findOne({ where: { cuit } });
+    if (!proveedor) return res.status(404).json({ error: 'Proveedor no encontrado por CUIT' });
+
     const articulos = await proveedor.getArticulos();
     res.json(articulos);
   } catch (error) {

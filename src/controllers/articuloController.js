@@ -31,7 +31,7 @@ exports.createArticulo = async (req, res) => {
       fecha_baja
     });
 
-    // Crear la relación con el proveedor
+    // Crear la relación con el proveedor si existe
     if (proveedor && proveedor.id_proveedor) {
       await ArticuloProveedor.create({
         id_articulo: nuevoArticulo.id_articulo,

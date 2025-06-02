@@ -4,18 +4,33 @@ const sequelize = require('../config/db');
 const ArticuloProveedor = sequelize.define('ArticuloProveedor', {
   id_articulo: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     primaryKey: true,
+    references: {
+      model: 'articulo',
+      key: 'id_articulo',
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   },
   id_proveedor: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     primaryKey: true,
+    references: {
+      model: 'proveedor',
+      key: 'id_proveedor',
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   },
   costo_pedido: {
     type: DataTypes.FLOAT,
-    defaultValue: 0.0,
+    allowNull: true,
   },
   modelo_inventario: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   proveedor_predeterminado: {
     type: DataTypes.BOOLEAN,
@@ -23,11 +38,11 @@ const ArticuloProveedor = sequelize.define('ArticuloProveedor', {
   },
   demora_entrega: {
     type: DataTypes.INTEGER,
-    defaultValue: 0,
+    allowNull: true,
   },
   precio_unitario: {
     type: DataTypes.FLOAT,
-    defaultValue: 0.0,
+    allowNull: true,
   },
 }, {
   tableName: 'articulo_proveedor',

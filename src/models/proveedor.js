@@ -8,31 +8,17 @@ const Proveedor = sequelize.define('Proveedor', {
     autoIncrement: true,
   },
   cuit: {
-    type: DataTypes.STRING(11),  // guardamos CUIT como string para evitar problemas con números grandes
-    unique: true,
+    type: DataTypes.BIGINT,
     allowNull: false,
-    validate: {
-      len: {
-        args: [11, 11],
-        msg: 'El CUIT debe tener exactamente 11 caracteres',
-      },
-      isNumeric: {
-        msg: 'El CUIT debe contener solo números',
-      },
-    },
+    unique: true,
   },
   razon_social: {
     type: DataTypes.STRING(100),
     allowNull: false,
   },
   telefono: {
-    type: DataTypes.STRING(20),  // string para permitir números con ceros a la izquierda o formatos especiales
+    type: DataTypes.BIGINT,
     allowNull: true,
-    validate: {
-      isNumeric: {
-        msg: 'El teléfono debe contener solo números',
-      },
-    },
   },
   proveedor_vigente: {
     type: DataTypes.BOOLEAN,

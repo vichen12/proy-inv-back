@@ -4,11 +4,14 @@ const articuloProveedorController = require('../controllers/articuloProveedorCon
 
 // Crear
 router.post('/', articuloProveedorController.createArticuloProveedor);
-// Actualizar
-router.put('/:id', articuloProveedorController.updateArticuloProveedor);
-// Consultar todos
-router.get('/', articuloProveedorController.getAllArticuloProveedores);
-// Consultar por ID
-router.get('/:id', articuloProveedorController.getArticuloProveedorById);
 
-module.exports = router; 
+// Actualizar (con clave compuesta)
+router.put('/:id_articulo/:id_proveedor', articuloProveedorController.updateArticuloProveedor);
+
+// Obtener todos
+router.get('/', articuloProveedorController.getAllArticuloProveedores);
+
+// Obtener por ID compuesto
+router.get('/:id_articulo/:id_proveedor', articuloProveedorController.getArticuloProveedorById);
+
+module.exports = router;

@@ -35,6 +35,7 @@ VentaDetalle.belongsTo(Articulo, { foreignKey: 'id_articulo' });
 OrdenCompra.hasMany(OrdenCompraDetalle, { foreignKey: 'id_orden_compra' });
 OrdenCompraDetalle.belongsTo(OrdenCompra, { foreignKey: 'id_orden_compra' });
 
+// Relación especial para OrdenCompraDetalle con ArticuloProveedor
 ArticuloProveedor.hasMany(OrdenCompraDetalle, {
   foreignKey: 'id_articulo',
   sourceKey: 'id_articulo',

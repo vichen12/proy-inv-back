@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
+const Proveedor = require('./Proveedor');
+const ArticuloProveedor = require('./ArticuloProveedor');
 
 const Articulo = sequelize.define('Articulo', {
   id_articulo: {
@@ -13,31 +15,31 @@ const Articulo = sequelize.define('Articulo', {
   },
   demanda: {
     type: DataTypes.INTEGER,
-    defaultValue: 0,
+    allowNull: true,
   },
   costo_almacenamiento: {
     type: DataTypes.FLOAT,
-    defaultValue: 0.0,
+    allowNull: true,
   },
   lote_optimo: {
     type: DataTypes.INTEGER,
-    defaultValue: 1,
+    allowNull: true,
   },
   punto_pedido: {
     type: DataTypes.INTEGER,
-    defaultValue: 0,
+    allowNull: true,
   },
   stock_seguridad: {
     type: DataTypes.INTEGER,
-    defaultValue: 0,
+    allowNull: true,
   },
   inventario_maximo: {
     type: DataTypes.INTEGER,
-    defaultValue: 0,
+    allowNull: true,
   },
   costo_compra: {
     type: DataTypes.FLOAT,
-    defaultValue: 0.0,
+    allowNull: true,
   },
   articulo_vigente: {
     type: DataTypes.BOOLEAN,
@@ -45,10 +47,19 @@ const Articulo = sequelize.define('Articulo', {
   },
   fecha_baja: {
     type: DataTypes.DATE,
+    allowNull: true,
   },
 }, {
   tableName: 'articulo',
   timestamps: false,
+});
+
+// Asociación muchos a muchos con tabla intermedia
+Articulo.belongsToMany(Proveedor, {
+  through: ArticuloProveedor,
+  foreignKey: 'id_articulo',
+  otherKey: 'id_proveedor',
+  as: 'proveedores',
 });
 
 module.exports = Articulo;

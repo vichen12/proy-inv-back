@@ -20,12 +20,22 @@ router.post('/', async (req, res) => {
   try {
     const nuevoArticulo = await db.Articulo.create({ descripcion, precio_unitario, demanda, lote_optimo });
 
-    // Crear relaciones con proveedores
     if (Array.isArray(proveedores)) {
       for (const proveedor of proveedores) {
+        // Aquí uso cuit (asegúrate que sea el campo correcto)
+        const proveedorDb = await db.Proveedor.findOne({ where: { cuit: proveedor.cuit } });
+        if (!proveedorDb) {
+          return res.status(400).json({ error: `Proveedor con cuit ${proveedor.cuit} no existe` });
+        }
+
         await db.ArticuloProveedor.create({
           id_articulo: nuevoArticulo.id_articulo,
-          cuil_proveedor: proveedor.cuil_proveedor
+          id_proveedor: proveedorDb.id_proveedor,
+          costo_pedido: proveedor.costo_pedido,
+          modelo_inventario: proveedor.modelo_inventario,
+          proveedor_predeterminado: proveedor.proveedor_predeterminado,
+          demora_entrega: proveedor.demora_entrega,
+          precio_unitario: proveedor.precio_unitario,
         });
       }
     }
@@ -71,25 +81,26 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// Obtener artículos por CUIL del proveedor
-router.get('/proveedor/:cuil', async (req, res) => {
-  const { cuil } = req.params;
+// Obtener artículos por CUIT del proveedor
+router.get('/proveedor/:cuit', async (req, res) => {
+  const { cuit } = req.params;
 
   try {
+    const proveedor = await db.Proveedor.findOne({ where: { cuit } });
+    if (!proveedor) return res.status(404).json({ error: 'Proveedor no encontrado' });
+
     const articulos = await db.Articulo.findAll({
-      include: {
-        model: db.ArticuloProveedor,
-        where: { cuil_proveedor: cuil }
-      }
+      include: [{
+        model: db.Proveedor,
+        where: { id_proveedor: proveedor.id_proveedor },
+        through: {
+          attributes: ['costo_pedido', 'modelo_inventario', 'proveedor_predeterminado', 'demora_entrega', 'precio_unitario']
+        },
+        attributes: [] // No traer campos del proveedor aquí, solo del intermedio y artículo
+      }]
     });
 
-    // Combinar info de Articulo y ArticuloProveedor
-    const resultado = articulos.map(a => ({
-      ...a.dataValues,
-      ...a.ArticuloProveedors[0]?.dataValues // Si hay varios, toma el primero
-    }));
-
-    res.json(resultado);
+    res.json(articulos);
   } catch (error) {
     console.error("Error al obtener artículos por proveedor:", error);
     res.status(500).json({ error: "Error al obtener artículos por proveedor" });

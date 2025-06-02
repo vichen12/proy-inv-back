@@ -1,4 +1,3 @@
-// Controlador de ArticuloProveedor 
 const ArticuloProveedor = require('../models/articuloProveedor');
 
 // Crear ArticuloProveedor
@@ -11,7 +10,7 @@ exports.createArticuloProveedor = async (req, res) => {
   }
 };
 
-// Actualizar ArticuloProveedor
+// Actualizar ArticuloProveedor (por clave compuesta)
 exports.updateArticuloProveedor = async (req, res) => {
   try {
     const { id_articulo, id_proveedor } = req.params;
@@ -27,7 +26,7 @@ exports.updateArticuloProveedor = async (req, res) => {
   }
 };
 
-// Consultar todos los ArticuloProveedor
+// Obtener todos los ArticuloProveedor
 exports.getAllArticuloProveedores = async (req, res) => {
   try {
     const aps = await ArticuloProveedor.findAll();
@@ -37,7 +36,7 @@ exports.getAllArticuloProveedores = async (req, res) => {
   }
 };
 
-// Consultar ArticuloProveedor por ID compuesto
+// Obtener ArticuloProveedor por ID compuesto
 exports.getArticuloProveedorById = async (req, res) => {
   try {
     const { id_articulo, id_proveedor } = req.params;
@@ -47,4 +46,4 @@ exports.getArticuloProveedorById = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}; 
+};
