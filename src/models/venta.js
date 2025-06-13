@@ -10,4 +10,4 @@ const Venta = sequelize.define('Venta', {
   timestamps: false,
 });
 
-module.exports = Venta; 
+module.exports = Venta;

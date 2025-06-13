@@ -4,11 +4,17 @@ const ventaDetalleController = require('../controllers/ventaDetalleController');
 
 // Crear
 router.post('/', ventaDetalleController.createVentaDetalle);
+
 // Actualizar
 router.put('/:id', ventaDetalleController.updateVentaDetalle);
+
 // Consultar todos
 router.get('/', ventaDetalleController.getAllVentaDetalles);
+
 // Consultar por ID
 router.get('/:id', ventaDetalleController.getVentaDetalleById);
 
-module.exports = router; 
+// Eliminar detalle de venta
+router.delete('/:id', ventaDetalleController.deleteVentaDetalle);
+
+module.exports = router;
