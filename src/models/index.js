@@ -26,11 +26,9 @@ ArticuloProveedor.belongsTo(Proveedor, { foreignKey: 'id_proveedor' });
 Articulo.hasMany(ArticuloProveedor, { foreignKey: 'id_articulo' });
 Proveedor.hasMany(ArticuloProveedor, { foreignKey: 'id_proveedor' });
 
-// Asociación: Venta y VentaDetalle
-Venta.hasMany(VentaDetalle, { foreignKey: 'id_venta', sourceKey: 'id_venta', as: 'detalles' });
-VentaDetalle.belongsTo(Venta, { foreignKey: 'id_venta', targetKey: 'id_venta', as: 'venta' });
+Venta.hasMany(VentaDetalle, { foreignKey: 'id_venta' });
+VentaDetalle.belongsTo(Venta, { foreignKey: 'id_venta' });
 
-// Asociación: Articulo y VentaDetalle
 Articulo.hasMany(VentaDetalle, { foreignKey: 'id_articulo' });
 VentaDetalle.belongsTo(Articulo, { foreignKey: 'id_articulo' });
 
